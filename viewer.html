@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html data-page-node-id="0e4GkEa6kkseQP3Um32fsw" lang="zh-CN">
+<head data-page-node-id="jjwT2NISg03qe43PSnunn0">
+<script data-page-node-id="kzpgviVrZjfWWuqO9gITW4" src="/page/page_comm/inject.js"></script>
+<meta data-page-node-id="k7k6LkYuUHLFYOpVakoMTW" charset="UTF-8">
+<meta data-page-node-id="Lox85WgoXHvLENWfn0Opuk" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<title data-page-node-id="GLrZ5XVWR3CJx6W6EeXXd4" data-pnid-children="5KFLyeMF4x3dFmHrESK7Bl">3D 模型查看器</title>
+<style data-page-node-id="0kNkxDE30OxWdekj9iOkj1" data-pnid-children="O1Z9aBv4nXGwvEsAJfOJ7P">
+  :root {
+    --accent: #e0442a;
+    --panel: rgba(255, 255, 255, 0.92);
+    --text: #2b2f36;
+    --muted: #8a9099;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { width: 100%; height: 100%; overflow: hidden; font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; }
+  #app { width: 100%; height: 100%; }
+  canvas { display: block; touch-action: none; }
+
+  /* 顶部标题 */
+  #title {
+    position: fixed; top: 12px; left: 12px; right: 12px;
+    padding: 10px 14px;
+    background: var(--panel);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    font-size: 14px; font-weight: 600; color: var(--text);
+    display: flex; justify-content: space-between; align-items: center;
+    pointer-events: none;
+  }
+  #title .sub { font-size: 11px; color: var(--muted); font-weight: normal; }
+
+  /* 底部控制条 */
+  #controls {
+    position: fixed; bottom: 12px; left: 12px; right: 12px;
+    background: var(--panel);
+    backdrop-filter: blur(8px);
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.1);
+    padding: 12px 16px 14px;
+  }
+  .row { display: flex; align-items: center; gap: 10px; }
+  .row + .row { margin-top: 10px; }
+  .row label { font-size: 13px; font-weight: 600; color: var(--text); white-space: nowrap; }
+  #explode {
+    flex: 1; height: 30px;
+    -webkit-appearance: none; appearance: none;
+    background: linear-gradient(to right, var(--accent) 0%, var(--accent) var(--fill, 0%), #e3e6ea var(--fill, 0%), #e3e6ea 100%);
+    border-radius: 15px; outline: none;
+  }
+  #explode::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: #fff; border: 3px solid var(--accent);
+    box-shadow: 0 2px 6px rgba(0,0,0,.2); cursor: pointer;
+  }
+  #explodeVal { font-size: 12px; color: var(--muted); width: 40px; text-align: right; }
+  .btns { display: flex; gap: 8px; }
+  .btns button {
+    flex: 1; height: 36px;
+    border: 1px solid #e3e6ea; border-radius: 10px;
+    background: #fff; font-size: 13px; font-weight: 600; color: var(--text);
+    cursor: pointer;
+  }
+  .btns button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* 加载 / 错误提示 */
+  #overlay {
+    position: fixed; inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: #f0f2f5; z-index: 10; gap: 14px; padding: 24px;
+  }
+  #overlay.hidden { display: none; }
+  .spinner {
+    width: 42px; height: 42px;
+    border: 4px solid #e3e6ea; border-top-color: var(--accent);
+    border-radius: 50%; animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  #msg { font-size: 14px; color: var(--text); text-align: center; line-height: 1.7; }
+  #msg .err { color: var(--accent); font-weight: 600; }
+  #dropzone {
+    border: 2px dashed #c9ced6; border-radius: 12px;
+    padding: 18px 26px; font-size: 13px; color: var(--muted); text-align: center;
+  }
+</style>
+</head>
+<body data-page-node-id="Xun5yHSkA0BOqy57egWyzX">
+
+<div data-page-node-id="nalWBPnruAvZRwsprPLjDR" id="app"></div>
+
+<div data-page-node-id="PNFwlfWSBREAQmPJAB3t9d" id="title">
+  <span data-page-node-id="QU9SlEnMyiIZIPg7qUbOrT" id="modelName"><!--pnid:lDrVqnPjvyvWP2gO4NbdEA-->3D 模型查看器</span>
+  <span data-page-node-id="bwKX2Hqo4AmIEH2G7Z8nl8" class="sub"><!--pnid:Xz6YNCjdlGnaK2xZZ7kzQ0-->拖动旋转 · 双指缩放</span>
+</div>
+
+<div data-page-node-id="Ynvc5YkJcyPq6FXzlac8nm" id="controls">
+  <div data-page-node-id="uZYmYwU1rKxvmThw2mvKlD" class="row">
+    <label data-page-node-id="yixnRhtSbW8HU7OVqt6jlU"><!--pnid:aWdH3kn1KZRJco7K7139Nb-->爆炸拆解</label>
+    <input data-page-node-id="paFEW9Fng1afBpLLkrK9H8" id="explode" max="100" min="0" type="range" value="0">
+    <span data-page-node-id="Rx81fdmUb4OWkXMtGOyV4i" id="explodeVal"><!--pnid:1GQuIMNj017Ka8uXhn54Zy-->0%</span>
+  </div>
+  <div data-page-node-id="M6l1wLxAFGKUcLrVUQcmOm" class="row btns">
+    <button data-page-node-id="jqed6LPfKJ8C0PhoUg2Fxv" id="btnReset"><!--pnid:jvO6XmgqVTSkM7T53PfcS6-->复位</button>
+    <button data-page-node-id="Q8GFC17QY2dXufu955v2Sb" id="btnSpin"><!--pnid:yDmzhF7zLZwqzg6thHcTJk-->自动旋转</button>
+    <button data-page-node-id="OZaGjTFp6HnNIzGFeVFEMT" id="btnGrid"><!--pnid:lpG3OqCjsqhaXvxP1lCyZT-->地面</button>
+  </div>
+</div>
+
+<div data-page-node-id="DFbizueI14YxmghV8Ro6SS" id="overlay">
+  <div data-page-node-id="MqMOxLOkKPZbx4Mxk5kDeu" class="spinner" id="spinner"></div>
+  <div data-page-node-id="EdRilxzoGadIEtSl3Q0UnY" id="msg"><!--pnid:w3wHoyxfkKo4b6hIklDk5x-->正在加载模型…</div>
+  <div data-page-node-id="wt3VqkMVJ8Lhdy35A5OdDV" id="dropzone"><!--pnid:MJDrflHduNbKW8hwGRR91g-->也可以把本地的 .glb / .gltf 文件<br data-page-node-id="mGXGQTiceHfKJFGNrJgHys"><!--pnid:bNptnrJMXb4m1MpdTJPtoJ-->拖到这里查看</div>
+</div>
+
+<script data-page-node-id="mrF8sd6ud42IarymzU7kHx" data-pnid-children="7zGgGfySdrXMM4v1qqijgI" type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script data-page-node-id="Ylto7gZXFUkl88YwZHakz5" data-pnid-children="YeUCjZdGCbo3IIvIJQggUS" type="module">
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+/* ---------------- 基础场景 ---------------- */
+const app = document.getElementById("app");
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+app.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xf0f2f5);
+
+const camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.01, 5000);
+camera.position.set(3, 2.5, 4);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+
+scene.add(new THREE.HemisphereLight(0xffffff, 0xb0b6bd, 1.1));
+const dir = new THREE.DirectionalLight(0xffffff, 1.6);
+dir.position.set(5, 8, 6);
+scene.add(dir);
+const dir2 = new THREE.DirectionalLight(0xffffff, 0.6);
+dir2.position.set(-6, 3, -5);
+scene.add(dir2);
+
+const grid = new THREE.GridHelper(20, 40, 0xc9ced6, 0xdfe3e8);
+scene.add(grid);
+
+addEventListener("resize", () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+/* ---------------- 模型加载 ---------------- */
+const overlay = document.getElementById("overlay");
+const msg = document.getElementById("msg");
+const spinner = document.getElementById("spinner");
+const modelName = document.getElementById("modelName");
+
+let modelRoot = null;          // gltf.scene
+let explodeParts = [];         // 每个网格的爆炸信息
+let explodeFactor = 0;
+let modelRadius = 1;
+
+function hideOverlay() { overlay.classList.add("hidden"); }
+
+function setupModel(scene3d, name) {
+  if (modelRoot) {
+    scene.remove(modelRoot);
+    modelRoot.traverse(o => {
+      if (o.geometry) o.geometry.dispose();
+      if (o.material) {
+        (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => m.dispose());
+      }
+    });
+  }
+  modelRoot = scene3d;
+  scene.add(modelRoot);
+
+  // 计算包围盒与相机适配
+  const box = new THREE.Box3().setFromObject(modelRoot);
+  const size = box.getSize(new THREE.Vector3());
+  const center = box.getCenter(new THREE.Vector3());
+  modelRadius = size.length() / 2 || 1;
+
+  // 把模型中心移到原点上方，方便旋转
+  modelRoot.position.set(-center.x, -box.min.y, -center.z);
+  modelRoot.updateMatrixWorld(true);
+
+  // 相机适配
+  const dist = modelRadius / Math.sin((camera.fov * Math.PI / 180) / 2) * 1.15;
+  camera.position.set(dist * 0.75, dist * 0.55, dist * 0.85);
+  controls.target.set(0, (size.y / 2) * 0.8, 0);
+  controls.update();
+
+  // 收集爆炸信息：每个网格按「自身中心 - 模型整体中心」方向飞出
+  explodeParts = [];
+  const worldCenter = new THREE.Vector3();
+  let idx = 0;
+  modelRoot.traverse(obj => {
+    if (obj.isMesh) {
+      const b = new THREE.Box3().setFromObject(obj);
+      const mc = b.getCenter(new THREE.Vector3());
+      // 注意：modelRoot 已平移到原点，整体中心即原点上方 size.y/2
+      const totalCenter = new THREE.Vector3(0, (box.max.y - box.min.y) / 2, 0);
+      let dirWorld = mc.clone().sub(totalCenter);
+      // 太靠近中心的零件给一个伪随机方向，保证也能炸开
+      if (dirWorld.length() < modelRadius * 0.05) {
+        const angle = idx * 2.39996; // 黄金角，分布均匀
+        dirWorld = new THREE.Vector3(Math.cos(angle), 0.25, Math.sin(angle));
+      }
+      dirWorld.normalize();
+
+      // 转换到父节点局部坐标
+      const parentQuat = obj.parent.getWorldQuaternion(new THREE.Quaternion()).invert();
+      const dirLocal = dirWorld.clone().applyQuaternion(parentQuat);
+
+      explodeParts.push({
+        mesh: obj,
+        basePos: obj.position.clone(),
+        dirLocal: dirLocal,
+        scale: modelRadius * 0.9 + (idx % 5) * modelRadius * 0.12 // 分层飞出，层次感更强
+      });
+      idx++;
+    }
+  });
+
+  modelName.textContent = name || "3D 模型";
+  document.getElementById("explodeVal").textContent = Math.round(explodeFactor * 100) + "%";
+  updateSliderFill();
+}
+
+function applyExplode() {
+  for (const p of explodeParts) {
+    p.mesh.position.copy(p.basePos).addScaledVector(p.dirLocal, explodeFactor * p.scale);
+  }
+}
+
+const loader = new GLTFLoader();
+function loadURL(url) {
+  msg.innerHTML = "正在加载模型…";
+  spinner.style.display = "block";
+  loader.load(
+    url,
+    (gltf) => {
+      setupModel(gltf.scene, decodeURIComponent(url.split("/").pop().split("?")[0]) || "3D 模型");
+      hideOverlay();
+    },
+    (xhr) => {
+      if (xhr.total) msg.innerHTML = "正在加载模型… " + Math.round((xhr.loaded / xhr.total) * 100) + "%";
+    },
+    (error) => {
+      spinner.style.display = "none";
+      msg.innerHTML = '<span class="err">模型加载失败</span><br>' +
+        "请检查链接是否正确，以及文件所在服务器是否允许跨域访问（CORS）。" +
+        "<br><small>错误信息：" + (error && error.message ? error.message : error) + "</small>";
+    }
+  );
+}
+
+function loadFile(file) {
+  const name = file.name;
+  msg.innerHTML = "正在加载本地文件…";
+  spinner.style.display = "block";
+  const fr = new FileReader();
+  fr.onload = () => {
+    try {
+      const loader2 = new GLTFLoader();
+      loader2.parse(fr.result, "", (gltf) => {
+        setupModel(gltf.scene, name);
+        hideOverlay();
+      }, (e) => {
+        spinner.style.display = "none";
+        msg.innerHTML = '<span class="err">文件解析失败</span><br>请确认是 .glb 或 .gltf 格式';
+      });
+    } catch (e) {
+      spinner.style.display = "none";
+      msg.innerHTML = '<span class="err">文件解析失败</span>';
+    }
+  };
+  fr.readAsArrayBuffer(file);
+}
+
+/* ---------------- 控件 ---------------- */
+const slider = document.getElementById("explode");
+const explodeVal = document.getElementById("explodeVal");
+
+function updateSliderFill() {
+  slider.style.setProperty("--fill", slider.value + "%");
+}
+slider.addEventListener("input", () => {
+  explodeFactor = slider.value / 100;
+  explodeVal.textContent = slider.value + "%";
+  updateSliderFill();
+  applyExplode();
+});
+
+document.getElementById("btnReset").addEventListener("click", () => {
+  slider.value = 0;
+  explodeFactor = 0;
+  explodeVal.textContent = "0%";
+  updateSliderFill();
+  applyExplode();
+  if (modelRoot) controls.target.set(0, modelRadius * 0.4, 0);
+});
+
+let spinning = false;
+const btnSpin = document.getElementById("btnSpin");
+btnSpin.addEventListener("click", () => {
+  spinning = !spinning;
+  btnSpin.classList.toggle("on", spinning);
+});
+
+let gridOn = true;
+const btnGrid = document.getElementById("btnGrid");
+btnGrid.classList.add("on");
+btnGrid.addEventListener("click", () => {
+  gridOn = !gridOn;
+  grid.visible = gridOn;
+  btnGrid.classList.toggle("on", gridOn);
+});
+
+/* 拖拽本地文件 */
+addEventListener("dragover", e => e.preventDefault());
+addEventListener("drop", e => {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (file && /\.(glb|gltf)$/i.test(file.name)) loadFile(file);
+});
+
+/* ---------------- 渲染循环 ---------------- */
+renderer.setAnimationLoop(() => {
+  if (spinning && modelRoot) modelRoot.rotation.y += 0.005;
+  controls.update();
+  renderer.render(scene, camera);
+});
+
+/* ---------------- 入口：?model=参数 ---------------- */
+const params = new URLSearchParams(location.search);
+const modelUrl = params.get("model");
+if (modelUrl) {
+  loadURL(modelUrl);
+} else {
+  spinner.style.display = "none";
+  msg.innerHTML = "提示：在网址后加 <b>?model=模型文件地址</b><br>即可自动加载线上 GLB 模型，例如：<br><small>?model=https://xxx.com/model.glb</small>";
+}
+</script>
+</body>
+</html>
