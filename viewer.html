@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html data-page-node-id="LYA5bWpweYolkTHlTFFxMf" lang="zh-CN">
-<head data-page-node-id="P7J62oUFLBDF0W89NdN8c8">
-<script data-page-node-id="5LD30XKImmZG99cTdZKW4u" src="/page/page_comm/inject.js"></script>
-<meta data-page-node-id="MATKsIPtlW3zTvhVf3Oo4V" charset="UTF-8">
-<meta data-page-node-id="sTMdCEqWYSxNBjB3g8eECO" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-<title data-page-node-id="8DCigg0p9NkAolEHumNlHE" data-pnid-children="zLMHA1qBbFp68sMJbP7pW6">3D 模型查看器</title>
-<style data-page-node-id="S065DvLrSUvdI8MQNG34Gy" data-pnid-children="mqRwsR0OF4bTHjNzywrw9b">
+<html data-page-node-id="XAXiLkT8x05vXn6KzYgO9F" lang="zh-CN">
+<head data-page-node-id="vs2obdnQnKEL5D1NASVt66">
+<script data-page-node-id="z3whDbXKHDvUUBs5V6mvOo" src="/page/page_comm/inject.js"></script>
+<meta data-page-node-id="qZQaCdoGry2UwDdMZLTArg" charset="UTF-8">
+<meta data-page-node-id="dpBSSZmfRiwSSAG53kfl59" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<title data-page-node-id="Z8fnoYdXcs6kooy1FX1NR5" data-pnid-children="aM7zeLCXUe43SYa5paL3aC">3D 模型查看器</title>
+<style data-page-node-id="wJ8mmFHGQfyZhEgldzJTFe" data-pnid-children="h1ZV0KtCwKTg3vnusrg1yc">
   :root {
     --accent: #e0442a;
     --panel: rgba(255, 255, 255, 0.92);
@@ -119,51 +119,51 @@
   }
 </style>
 </head>
-<body data-page-node-id="Tyj6I6kBqitquyEBBLXo64">
+<body data-page-node-id="gGmq9obdCueCVOa31bFoeW">
 
-<div data-page-node-id="rzP4sTduMhyxHKTkvTRUCl" id="app"></div>
+<div data-page-node-id="nqqmJxwS3QNWba7a27pgHA" id="app"></div>
 
-<div data-page-node-id="38ttDSkq3Rpl1YOr2Jvcmx" id="title">
-  <span data-page-node-id="YAOARG9wudeInnk6LprHZd" id="modelName"><!--pnid:aO3Byic8lKvWL12exqLVWL-->3D 模型查看器</span>
-  <span data-page-node-id="J1LiKt5gGAiz9U4BaFQMCx" class="sub"><!--pnid:TWzoDSRf4HWDew9nBF7feO-->拖动旋转 · 双指缩放 · 点板件看名称</span>
+<div data-page-node-id="s1BRrkbKgPxTnmmV34or41" id="title">
+  <span data-page-node-id="K4q4P5lIUf1PjtImAZqSKQ" id="modelName"><!--pnid:5lLHB4RfkGWdFSWrHQL2Rh-->3D 模型查看器</span>
+  <span data-page-node-id="F1lFRbF6lWMNqUOYudoQU9" class="sub"><!--pnid:51B6yQvDhd4nTeQSnBcLNO-->拖动旋转 · 双指缩放 · 点板件看名称</span>
 </div>
 
-<div data-page-node-id="kCRBtHKiL4LqZjXweZbr7M" id="info">
-  <div data-page-node-id="s1ardIl9rDQW5wdMpJv5Mx">
-    <div data-page-node-id="LTXBoNZR9oZZ5frsHXX0ur" class="name" id="infoName"><!--pnid:6X0ft7DgVE3ZXiwkpaVeiH-->板件名称</div>
-    <div data-page-node-id="pEzmjm5fujBwvVKFxKL7eX" class="meta" id="infoMeta"><!--pnid:hgMBs7np7LR7k76JbB6P8y-->尺寸</div>
+<div data-page-node-id="yhKQvD3U6VDhnAqnFhbxIl" id="info">
+  <div data-page-node-id="WwNGE1cCFdMmwWbGGsm7yS">
+    <div data-page-node-id="0vOzl1ln2BrLyNTUhrlwhx" class="name" id="infoName"><!--pnid:anv0gW4PkSxTbP62VxYqEQ-->板件名称</div>
+    <div data-page-node-id="BPQXUfjc4PFYnLBaQt0ReW" class="meta" id="infoMeta"><!--pnid:WXHU9n5a7vTwofRJyD5Mvq-->尺寸</div>
   </div>
-  <button data-page-node-id="011aewPqq8AARuBVFu9McF" id="infoClose"><!--pnid:7rBckOHHWMXpVr4Vacf3Qy-->✕</button>
+  <button data-page-node-id="Xzso1RKgCZtq1Xc50ZxXyn" id="infoClose"><!--pnid:P7RlQvL3NwdUfApnOmspCY-->✕</button>
 </div>
 
-<div data-page-node-id="dIDXLcowBgbSypzETuTL96" id="controls">
-  <div data-page-node-id="1fgUAULAlcWqK4dd7lmX1g" id="cabBar"></div>
-  <div data-page-node-id="hRAZeXfCbwFIPbhvPCutGH" class="row">
-    <label data-page-node-id="MTQPf8G5TzRhsmLhoZEz2A"><!--pnid:YCUsBt03MjCyBUJNRwJ5U8-->爆炸拆解</label>
-    <input data-page-node-id="9EXfpgjq6N3E0pRfgzUAIl" id="explode" max="100" min="0" type="range" value="0">
-    <span data-page-node-id="Et3Q35kjRRqVxHpnPqUTUX" id="explodeVal"><!--pnid:dmC0TRff3TskGGRGZ8RerD-->0%</span>
+<div data-page-node-id="ExvmD8CJ9qW9qBntfpKlDZ" id="controls">
+  <div data-page-node-id="IfpzlTrXi93gQf7LL0SiK4" id="cabBar"></div>
+  <div data-page-node-id="DbmgNHya9FEiQacJKlg6cR" class="row">
+    <label data-page-node-id="H8WkqfE20ubHh6yuVAmSRn"><!--pnid:JELIbUAJMv1yl3ZYtjxfZU-->爆炸拆解</label>
+    <input data-page-node-id="IWnb2sjZISAB3SXLfM2sWr" id="explode" max="100" min="0" type="range" value="0">
+    <span data-page-node-id="qZtRcjRLomef5EfMXlAFEc" id="explodeVal"><!--pnid:zelykQaeKipR03fTwLcBel-->0%</span>
   </div>
-  <div data-page-node-id="zg3sixSPKvS2wHgs2KTTIQ" class="row btns">
-    <button data-page-node-id="2a7eOAPO2ZcmnPYI8Zhprd" id="btnReset"><!--pnid:2kN1t9hXicmP4C83rrap0U-->复位</button>
-    <button data-page-node-id="KMD3yzg2zjo2slIUSWbHsH" id="btnSpin"><!--pnid:PrjdYoHglLkiud50A4XqDT-->自动旋转</button>
-    <button data-page-node-id="cDQgFEMY8Hx7jCovylkg3t" id="btnGrid"><!--pnid:Xg8HcY5VmBP6iiSAqBtPjv-->地面</button>
+  <div data-page-node-id="xtSGsk7ZSJfDzvPxUyrYgi" class="row btns">
+    <button data-page-node-id="h5GnTjVnGIgAeZABbnigMv" id="btnReset"><!--pnid:p50C9N35tfNqD0owfeSdKb-->复位</button>
+    <button data-page-node-id="wDGvkB5fnyjXDbK6ezr2fm" id="btnSpin"><!--pnid:7uH73h2mZfcaZ9cLPc52Rw-->自动旋转</button>
+    <button data-page-node-id="jIwVs6IiZnh6PIIRAj70d4" id="btnGrid"><!--pnid:8PHSyVX3TUX6anjKnPW48e-->地面</button>
   </div>
-  <div data-page-node-id="owJIQxfuuCKKvFo5cM9fZv" class="views">
-    <button data-page-node-id="y7bbnKfPWW91ZYsqkhqsfp" id="viewFront"><!--pnid:CY3Ba9KhvuC0ftnDu55FH2-->正视</button>
-    <button data-page-node-id="Ves349nBlEIrEBGAeyJeoD" id="viewBack"><!--pnid:BFlShJcWMDOisFzUjinvsZ-->后视</button>
-    <button data-page-node-id="jWkW7OHh8ouNGWbOgBwk0J" id="viewLeft"><!--pnid:1pXd85auNrULbMrQOT3mt6-->左视</button>
-    <button data-page-node-id="LZwpsLGo0Zq1MN0gDh7yWJ" id="viewRight"><!--pnid:xXXJowh3dTOeZiHXNgGgqM-->右视</button>
-    <button data-page-node-id="Sb8aIlB0iX1N4gUFWot8xj" id="viewTop"><!--pnid:fWzpnY9h0E9gOt4HL4obpY-->俯视</button>
+  <div data-page-node-id="X9WJO807pigba9GLdfAf4b" class="views">
+    <button data-page-node-id="3aJyd2lcpGDkrwBsZZ5NAU" id="viewFront"><!--pnid:gOqwXRDZr83U4X1Gxbbj2m-->正视</button>
+    <button data-page-node-id="I94VA1b9OaP21DbgLib2ep" id="viewBack"><!--pnid:VwSFC281h7Q2rrOeGak9NK-->后视</button>
+    <button data-page-node-id="S9u64piaHBTWCkKlT92iqV" id="viewLeft"><!--pnid:J6OAWWxqa4PaC8GaRcQiMM-->左视</button>
+    <button data-page-node-id="1lgCl3qr0sbV9U3b1wTRml" id="viewRight"><!--pnid:ZtVwTkOeCwPASTSN0zMHlq-->右视</button>
+    <button data-page-node-id="M89RXqmG5nYQPDkrz4edPt" id="viewTop"><!--pnid:9kJY8Io79ab3IJvROxDBKV-->俯视</button>
   </div>
 </div>
 
-<div data-page-node-id="yb0AITf9rv4fmlNdRpB8nD" id="overlay">
-  <div data-page-node-id="JL29S06bCkj0rGgm6hcb98" class="spinner" id="spinner"></div>
-  <div data-page-node-id="5tm1dKI1e9E7qtGHAE0l2t" id="msg"><!--pnid:5DiB3ib5dGkdw4rcUaNGH6-->正在加载模型…</div>
-  <div data-page-node-id="VkXYSv0PBR6E4TeX7s62vG" id="dropzone"><!--pnid:rb2C7OlTD68AiymTzAFeCJ-->也可以把本地的 .glb / .gltf 文件<br data-page-node-id="HiBOfL1VrmY0fbkXfDtc0U"><!--pnid:DmNf46MfznwukA0fwwdRen-->拖到这里查看</div>
+<div data-page-node-id="aFxhO2XR6fLi1ukgyXQUBm" id="overlay">
+  <div data-page-node-id="hHdXpVDs8dzjPm2FGFg7mL" class="spinner" id="spinner"></div>
+  <div data-page-node-id="pIbcuzIYOs7dZUDr4ZcZBI" id="msg"><!--pnid:uGzyhzJMwSkqCdzBtRlioc-->正在加载模型…</div>
+  <div data-page-node-id="ygtGEoFb9PGhVEv7a5Jq43" id="dropzone"><!--pnid:8nQTBVWjmPEDtFPfcyGU8R-->也可以把本地的 .glb / .gltf 文件<br data-page-node-id="87G6rmowCrB1lkS1yZ9THw"><!--pnid:sijwUR3hUprdgwwFLgKZeF-->拖到这里查看</div>
 </div>
 
-<script data-page-node-id="tl6EPJuD6TG6T1hqj3cuBE" data-pnid-children="iCu1leP1HjTYqfKCOTipxN" type="importmap">
+<script data-page-node-id="1iM2AxUgG2GY1Kfdr5pDUm" data-pnid-children="9ORWWHiLrM5EkvcW9743IC" type="importmap">
 {
   "imports": {
     "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
@@ -172,7 +172,7 @@
 }
 </script>
 
-<script data-page-node-id="ne0rknAZohxSJnM83tbgOr" data-pnid-children="WEAoTdmumswWEuhME5FUyZ" type="module">
+<script data-page-node-id="ruZko1QiGaxCFODCcA3Fvt" data-pnid-children="X84tnITbsd6OguKcpC7Rz0" type="module">
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
@@ -307,11 +307,18 @@ function setupModel(scene3d, name) {
 /* ---------------- 柜体识别与选择 ---------------- */
 let selectedCabinet = null;    // null = 全部柜体
 
-// 找网格所属的柜体：往上找「直接挂在模型根部下」的节点名
+// 找网格所属的柜体：往上找「直接挂在模型根部下」的节点名。
+// 若该顶层节点本身是一块板，或其下只有一块与节点同名的板
+// （旧版平铺模型没有柜体层级），则归入「未分组」，不冒充柜体。
 function cabinetOf(obj) {
   let o = obj;
   while (o.parent && o.parent !== modelRoot) o = o.parent;
-  if (o && o !== modelRoot && o.name) return o.name;
+  if (o && o !== modelRoot && o.name) {
+    let meshCount = 0, meshName = null;
+    o.traverse(c => { if (c.isMesh) { meshCount++; meshName = c.name; } });
+    const selfAssembly = o.isMesh || (meshCount === 1 && meshName === o.name);
+    if (!selfAssembly) return o.name;
+  }
   return "未分组";
 }
 
