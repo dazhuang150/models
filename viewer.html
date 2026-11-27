@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html data-page-node-id="XdlyO8bu4GfWw67crHdqQh" lang="zh-CN">
-<head data-page-node-id="Q28oEvOd1gXhN34lZu0oCE">
-<script data-page-node-id="9jGtjuv3QxiyUz6t4s0zab" src="/page/page_comm/inject.js"></script>
-<meta data-page-node-id="szsPdL4rlalK6LwJesxQjG" charset="UTF-8">
-<meta data-page-node-id="Ot0rXTxZSW2lJEX5t7ozNF" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-<title data-page-node-id="nP8203HfV2ZJ5mumQrROzP" data-pnid-children="jWTSBT4dh0gUsaOvH1qCgh">3D 模型查看器</title>
-<style data-page-node-id="0k0WFkEvBQaiFklGkOX1nT" data-pnid-children="zdFkNjT1FLozpM2rXVUFdp">
+<html data-page-node-id="LYA5bWpweYolkTHlTFFxMf" lang="zh-CN">
+<head data-page-node-id="P7J62oUFLBDF0W89NdN8c8">
+<script data-page-node-id="5LD30XKImmZG99cTdZKW4u" src="/page/page_comm/inject.js"></script>
+<meta data-page-node-id="MATKsIPtlW3zTvhVf3Oo4V" charset="UTF-8">
+<meta data-page-node-id="sTMdCEqWYSxNBjB3g8eECO" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<title data-page-node-id="8DCigg0p9NkAolEHumNlHE" data-pnid-children="zLMHA1qBbFp68sMJbP7pW6">3D 模型查看器</title>
+<style data-page-node-id="S065DvLrSUvdI8MQNG34Gy" data-pnid-children="mqRwsR0OF4bTHjNzywrw9b">
   :root {
     --accent: #e0442a;
     --panel: rgba(255, 255, 255, 0.92);
@@ -66,6 +66,16 @@
   .btns button.on, .views button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
   .views { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin-top: 10px; }
 
+  /* 柜体选择栏 */
+  #cabBar { display: none; gap: 6px; overflow-x: auto; padding-bottom: 2px; -webkit-overflow-scrolling: touch; }
+  #cabBar.show { display: flex; }
+  .chip {
+    padding: 7px 14px; border-radius: 15px; white-space: nowrap;
+    background: #fff; border: 1px solid #e3e6ea;
+    font-size: 12px; font-weight: 600; color: var(--text); cursor: pointer;
+  }
+  .chip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+
   /* 板件信息卡 */
   #info {
     position: fixed; top: 64px; left: 12px; right: 12px;
@@ -109,50 +119,51 @@
   }
 </style>
 </head>
-<body data-page-node-id="4UsPhBadn6X7pBCUBUlkkg">
+<body data-page-node-id="Tyj6I6kBqitquyEBBLXo64">
 
-<div data-page-node-id="SpmmGjfQ4DmANzcAnDVnJY" id="app"></div>
+<div data-page-node-id="rzP4sTduMhyxHKTkvTRUCl" id="app"></div>
 
-<div data-page-node-id="NQ7IGgX04vqGs9GoEWQB4e" id="title">
-  <span data-page-node-id="0u7nBjcJo1V94684BVArRD" id="modelName"><!--pnid:xvWLMunMK8bIvADrXYkvbY-->3D 模型查看器</span>
-  <span data-page-node-id="Emx4FGgIosMrHNY6NLDzi2" class="sub"><!--pnid:l0aPzE1AKWvwdJkBc8dqy8-->拖动旋转 · 双指缩放 · 点板件看名称</span>
+<div data-page-node-id="38ttDSkq3Rpl1YOr2Jvcmx" id="title">
+  <span data-page-node-id="YAOARG9wudeInnk6LprHZd" id="modelName"><!--pnid:aO3Byic8lKvWL12exqLVWL-->3D 模型查看器</span>
+  <span data-page-node-id="J1LiKt5gGAiz9U4BaFQMCx" class="sub"><!--pnid:TWzoDSRf4HWDew9nBF7feO-->拖动旋转 · 双指缩放 · 点板件看名称</span>
 </div>
 
-<div data-page-node-id="YzVG4szP6zatMcwFTauHto" id="info">
-  <div data-page-node-id="1OOYEp0KkNru52Ul2kQAcY">
-    <div data-page-node-id="1bUIH5wcCJrCzujuQSTB6U" class="name" id="infoName"><!--pnid:Y1esbl6rem3N4dvXm5BNdN-->板件名称</div>
-    <div data-page-node-id="lB8Nps4haXqc70stuLLOPG" class="meta" id="infoMeta"><!--pnid:RCJQbh0x9Kmj8mv2soNrvp-->尺寸</div>
+<div data-page-node-id="kCRBtHKiL4LqZjXweZbr7M" id="info">
+  <div data-page-node-id="s1ardIl9rDQW5wdMpJv5Mx">
+    <div data-page-node-id="LTXBoNZR9oZZ5frsHXX0ur" class="name" id="infoName"><!--pnid:6X0ft7DgVE3ZXiwkpaVeiH-->板件名称</div>
+    <div data-page-node-id="pEzmjm5fujBwvVKFxKL7eX" class="meta" id="infoMeta"><!--pnid:hgMBs7np7LR7k76JbB6P8y-->尺寸</div>
   </div>
-  <button data-page-node-id="4v6Ps1LrNk81rEcTB0mUtv" id="infoClose"><!--pnid:xLBAmM5yQKJUAZZxrsFsHE-->✕</button>
+  <button data-page-node-id="011aewPqq8AARuBVFu9McF" id="infoClose"><!--pnid:7rBckOHHWMXpVr4Vacf3Qy-->✕</button>
 </div>
 
-<div data-page-node-id="x6utxH5R7rGSZ8ha0e2Ffa" id="controls">
-  <div data-page-node-id="5DNTZgL6lcHpWdQvPYuLSj" class="row">
-    <label data-page-node-id="jCC36EBdF16SsNGUkezqQI"><!--pnid:63DSgeSo0hgCaFRIKV6KRr-->爆炸拆解</label>
-    <input data-page-node-id="BKiHiLEuKO7joyhdcRc8IU" id="explode" max="100" min="0" type="range" value="0">
-    <span data-page-node-id="zbNlstgiZYo4z2I7AVAGQI" id="explodeVal"><!--pnid:jlqUSwxiU2wxvBACMPl41t-->0%</span>
+<div data-page-node-id="dIDXLcowBgbSypzETuTL96" id="controls">
+  <div data-page-node-id="1fgUAULAlcWqK4dd7lmX1g" id="cabBar"></div>
+  <div data-page-node-id="hRAZeXfCbwFIPbhvPCutGH" class="row">
+    <label data-page-node-id="MTQPf8G5TzRhsmLhoZEz2A"><!--pnid:YCUsBt03MjCyBUJNRwJ5U8-->爆炸拆解</label>
+    <input data-page-node-id="9EXfpgjq6N3E0pRfgzUAIl" id="explode" max="100" min="0" type="range" value="0">
+    <span data-page-node-id="Et3Q35kjRRqVxHpnPqUTUX" id="explodeVal"><!--pnid:dmC0TRff3TskGGRGZ8RerD-->0%</span>
   </div>
-  <div data-page-node-id="kCPfArQyD7eMbgh2mLSmbb" class="row btns">
-    <button data-page-node-id="YDL0W2taa5TtjtSemMM3kN" id="btnReset"><!--pnid:4egJXlnRen8ReUdIVQiVSP-->复位</button>
-    <button data-page-node-id="BbSquS5zGhfDCk7gG4rZBH" id="btnSpin"><!--pnid:amqHB4vQwXCXOZanB231tu-->自动旋转</button>
-    <button data-page-node-id="3CkFLdAnu1sPY5vyXqgyl3" id="btnGrid"><!--pnid:qTDpeW6yZDevBNhFyiETXn-->地面</button>
+  <div data-page-node-id="zg3sixSPKvS2wHgs2KTTIQ" class="row btns">
+    <button data-page-node-id="2a7eOAPO2ZcmnPYI8Zhprd" id="btnReset"><!--pnid:2kN1t9hXicmP4C83rrap0U-->复位</button>
+    <button data-page-node-id="KMD3yzg2zjo2slIUSWbHsH" id="btnSpin"><!--pnid:PrjdYoHglLkiud50A4XqDT-->自动旋转</button>
+    <button data-page-node-id="cDQgFEMY8Hx7jCovylkg3t" id="btnGrid"><!--pnid:Xg8HcY5VmBP6iiSAqBtPjv-->地面</button>
   </div>
-  <div data-page-node-id="fH0SVdwL8M5GuU6Q3Q6RNd" class="views">
-    <button data-page-node-id="sjxMzTsTmMvnvR3p6rxdLh" id="viewFront"><!--pnid:58gFqkCLXTyvtOYz1jsQmI-->正视</button>
-    <button data-page-node-id="4L2KEJb7UWUnTGjAeF6ztV" id="viewBack"><!--pnid:vO9NqE90oeVXI0T0y17XbL-->后视</button>
-    <button data-page-node-id="awAjHpWoXbX1Fn1nECjckv" id="viewLeft"><!--pnid:NHMZtFmcTTAc8SUVVeVLgx-->左视</button>
-    <button data-page-node-id="wRBC0B6FxTygCJH3o5yFwM" id="viewRight"><!--pnid:cTBBfDmrK6sE8i2wgq8cKg-->右视</button>
-    <button data-page-node-id="j8dj6XW8mfiG8ztBtWOQAp" id="viewTop"><!--pnid:aP8944psv4XAEjiERa9tXt-->俯视</button>
+  <div data-page-node-id="owJIQxfuuCKKvFo5cM9fZv" class="views">
+    <button data-page-node-id="y7bbnKfPWW91ZYsqkhqsfp" id="viewFront"><!--pnid:CY3Ba9KhvuC0ftnDu55FH2-->正视</button>
+    <button data-page-node-id="Ves349nBlEIrEBGAeyJeoD" id="viewBack"><!--pnid:BFlShJcWMDOisFzUjinvsZ-->后视</button>
+    <button data-page-node-id="jWkW7OHh8ouNGWbOgBwk0J" id="viewLeft"><!--pnid:1pXd85auNrULbMrQOT3mt6-->左视</button>
+    <button data-page-node-id="LZwpsLGo0Zq1MN0gDh7yWJ" id="viewRight"><!--pnid:xXXJowh3dTOeZiHXNgGgqM-->右视</button>
+    <button data-page-node-id="Sb8aIlB0iX1N4gUFWot8xj" id="viewTop"><!--pnid:fWzpnY9h0E9gOt4HL4obpY-->俯视</button>
   </div>
 </div>
 
-<div data-page-node-id="8UcUUpQN1Wds1ymdooiL88" id="overlay">
-  <div data-page-node-id="SCYBrUy3Tgf4CpOYbGp6ui" class="spinner" id="spinner"></div>
-  <div data-page-node-id="yASG27mlX7X47Ig3VxCuaL" id="msg"><!--pnid:vS8mW9g8f5fefbzB4G3uuQ-->正在加载模型…</div>
-  <div data-page-node-id="Jnt4W9Yy05Ohfw641zt8rw" id="dropzone"><!--pnid:bPPvAWHTWjdITrQipRYPrt-->也可以把本地的 .glb / .gltf 文件<br data-page-node-id="SZrtK373quOkap9lv2M10A"><!--pnid:0ljoxkZBGFfJhQlukhApvR-->拖到这里查看</div>
+<div data-page-node-id="yb0AITf9rv4fmlNdRpB8nD" id="overlay">
+  <div data-page-node-id="JL29S06bCkj0rGgm6hcb98" class="spinner" id="spinner"></div>
+  <div data-page-node-id="5tm1dKI1e9E7qtGHAE0l2t" id="msg"><!--pnid:5DiB3ib5dGkdw4rcUaNGH6-->正在加载模型…</div>
+  <div data-page-node-id="VkXYSv0PBR6E4TeX7s62vG" id="dropzone"><!--pnid:rb2C7OlTD68AiymTzAFeCJ-->也可以把本地的 .glb / .gltf 文件<br data-page-node-id="HiBOfL1VrmY0fbkXfDtc0U"><!--pnid:DmNf46MfznwukA0fwwdRen-->拖到这里查看</div>
 </div>
 
-<script data-page-node-id="oRQwiHfZlNwryUlEuzSqsC" data-pnid-children="GgJFqvX8FXhnXzxsG7YmUs" type="importmap">
+<script data-page-node-id="tl6EPJuD6TG6T1hqj3cuBE" data-pnid-children="iCu1leP1HjTYqfKCOTipxN" type="importmap">
 {
   "imports": {
     "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
@@ -161,7 +172,7 @@
 }
 </script>
 
-<script data-page-node-id="Pd8N8hacG0Z5PPf2Vpxpy8" data-pnid-children="vgXUcs12loH0UuGJU96Xbq" type="module">
+<script data-page-node-id="ne0rknAZohxSJnM83tbgOr" data-pnid-children="WEAoTdmumswWEuhME5FUyZ" type="module">
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
@@ -259,6 +270,7 @@ function setupModel(scene3d, name) {
     if (obj.isLine || obj.isLineSegments || obj.isPoints) { obj.visible = false; return; }
     if (obj.isMesh) {
       obj.userData.partName = pickPartName(obj);
+      obj.userData.cabinet = cabinetOf(obj);
       const b = new THREE.Box3().setFromObject(obj);
       const mc = b.getCenter(new THREE.Vector3());
       // 注意：modelRoot 已平移到原点，整体中心即原点上方 size.y/2
@@ -287,12 +299,73 @@ function setupModel(scene3d, name) {
   });
 
   modelName.textContent = name || "3D 模型";
+  buildCabinetBar();
   document.getElementById("explodeVal").textContent = Math.round(explodeFactor * 100) + "%";
   updateSliderFill();
 }
 
+/* ---------------- 柜体识别与选择 ---------------- */
+let selectedCabinet = null;    // null = 全部柜体
+
+// 找网格所属的柜体：往上找「直接挂在模型根部下」的节点名
+function cabinetOf(obj) {
+  let o = obj;
+  while (o.parent && o.parent !== modelRoot) o = o.parent;
+  if (o && o !== modelRoot && o.name) return o.name;
+  return "未分组";
+}
+
+const cabBar = document.getElementById("cabBar");
+function buildCabinetBar() {
+  const names = [];
+  pickMeshes.forEach(m => {
+    const c = m.userData.cabinet || "未分组";
+    if (!names.includes(c)) names.push(c);
+  });
+  if (names.length < 2) {           // 只有一个柜体时不显示选择栏
+    cabBar.classList.remove("show");
+    selectedCabinet = null;
+    return;
+  }
+  cabBar.innerHTML = "";
+  const mk = (label, val) => {
+    const b = document.createElement("button");
+    b.className = "chip" + ((selectedCabinet === val) ? " on" : "");
+    b.textContent = label;
+    b.addEventListener("click", () => {
+      selectedCabinet = val;
+      cabBar.querySelectorAll(".chip").forEach(c => c.classList.remove("on"));
+      b.classList.add("on");
+      applyCabinetFilter();
+      applyExplode();
+    });
+    return b;
+  };
+  cabBar.appendChild(mk("全部", null));
+  names.forEach(n => cabBar.appendChild(mk(n, n)));
+  cabBar.classList.add("show");
+}
+
+// 选中的柜体正常显示并参与爆炸，其余变半透明且不参与爆炸
+function applyCabinetFilter() {
+  for (const p of explodeParts) {
+    const m = p.mesh;
+    const active = !selectedCabinet || m.userData.cabinet === selectedCabinet;
+    const mats = Array.isArray(m.material) ? m.material : [m.material];
+    mats.forEach(mat => {
+      mat.transparent = true;
+      mat.opacity = active ? 1.0 : 0.12;
+      mat.depthWrite = active;
+    });
+  }
+}
+
 function applyExplode() {
   for (const p of explodeParts) {
+    if (selectedCabinet && p.mesh.userData.cabinet !== selectedCabinet) {
+      p.mesh.position.copy(p.basePos); // 其他柜体复位不动
+      continue;
+    }
     p.mesh.position.copy(p.basePos).addScaledVector(p.dirLocal, explodeFactor * p.scale);
   }
 }
@@ -390,7 +463,8 @@ function showInfo(mesh) {
   const size = box.getSize(new THREE.Vector3());
   const mm = [size.x, size.y, size.z].map(v => Math.round(v * 1000));
   infoName.textContent = mesh.userData.partName || "未命名板件";
-  infoMeta.textContent = "尺寸：" + mm[0] + " × " + mm[1] + " × " + mm[2] + " mm（长宽高近似值）";
+  const cab = mesh.userData.cabinet || "未分组";
+  infoMeta.textContent = "所属：" + cab + " · 尺寸：" + mm[0] + " × " + mm[1] + " × " + mm[2] + " mm";
   infoCard.classList.add("show");
 }
 
