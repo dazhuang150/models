@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html data-page-node-id="0e4GkEa6kkseQP3Um32fsw" lang="zh-CN">
-<head data-page-node-id="jjwT2NISg03qe43PSnunn0">
-<script data-page-node-id="kzpgviVrZjfWWuqO9gITW4" src="/page/page_comm/inject.js"></script>
-<meta data-page-node-id="k7k6LkYuUHLFYOpVakoMTW" charset="UTF-8">
-<meta data-page-node-id="Lox85WgoXHvLENWfn0Opuk" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-<title data-page-node-id="GLrZ5XVWR3CJx6W6EeXXd4" data-pnid-children="5KFLyeMF4x3dFmHrESK7Bl">3D 模型查看器</title>
-<style data-page-node-id="0kNkxDE30OxWdekj9iOkj1" data-pnid-children="O1Z9aBv4nXGwvEsAJfOJ7P">
+<html data-page-node-id="tDZUvvqlflRgrlSKcFJBOR" lang="zh-CN">
+<head data-page-node-id="h9LTTcgmBn8xId0Rm4oNYe">
+<script data-page-node-id="FzS4PdlVLh61f0P4wKhtwS" src="/page/page_comm/inject.js"></script>
+<meta data-page-node-id="p9zmq9MPsAs6SIdynm8yWq" charset="UTF-8">
+<meta data-page-node-id="6cfvSJ7nA6taraG7yZC7go" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<title data-page-node-id="8VYCVPjkBP3RdOr69GRftF" data-pnid-children="izNDpA8nvwtkt9YEMnJOT5">3D 模型查看器</title>
+<style data-page-node-id="kFoen8YtCo8JugnIfnUUgF" data-pnid-children="46eC2Lw4zyduGOj2k1IsVR">
   :root {
     --accent: #e0442a;
     --panel: rgba(255, 255, 255, 0.92);
@@ -65,6 +65,28 @@
   }
   .btns button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
 
+  /* 板件信息卡 */
+  #info {
+    position: fixed; top: 64px; left: 12px; right: 12px;
+    background: var(--panel);
+    backdrop-filter: blur(8px);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.12);
+    padding: 10px 14px;
+    font-size: 14px; color: var(--text);
+    display: none;
+    align-items: center; justify-content: space-between; gap: 10px;
+    z-index: 5;
+  }
+  #info.show { display: flex; }
+  #info .name { font-weight: 700; font-size: 15px; }
+  #info .meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  #info button {
+    border: none; background: var(--accent); color: #fff;
+    width: 26px; height: 26px; border-radius: 50%;
+    font-size: 14px; line-height: 1; cursor: pointer; flex-shrink: 0;
+  }
+
   /* 加载 / 错误提示 */
   #overlay {
     position: fixed; inset: 0;
@@ -86,35 +108,43 @@
   }
 </style>
 </head>
-<body data-page-node-id="Xun5yHSkA0BOqy57egWyzX">
+<body data-page-node-id="WkZNPPysRCVqnCXzpCqVAq">
 
-<div data-page-node-id="nalWBPnruAvZRwsprPLjDR" id="app"></div>
+<div data-page-node-id="iiaHRzZmbK7bb2tDcQFXBg" id="app"></div>
 
-<div data-page-node-id="PNFwlfWSBREAQmPJAB3t9d" id="title">
-  <span data-page-node-id="QU9SlEnMyiIZIPg7qUbOrT" id="modelName"><!--pnid:lDrVqnPjvyvWP2gO4NbdEA-->3D 模型查看器</span>
-  <span data-page-node-id="bwKX2Hqo4AmIEH2G7Z8nl8" class="sub"><!--pnid:Xz6YNCjdlGnaK2xZZ7kzQ0-->拖动旋转 · 双指缩放</span>
+<div data-page-node-id="kZGJEVWl8pOGvp4BcAswZg" id="title">
+  <span data-page-node-id="8FsGxX7RLKBkYQkEc5hujV" id="modelName"><!--pnid:cSVH54fpRUvJyzjk9Lmlwr-->3D 模型查看器</span>
+  <span data-page-node-id="U1dGyHvHb8XPN312iEgP9F" class="sub"><!--pnid:8A2sjFALl1KrY9Fi7ilOFr-->拖动旋转 · 双指缩放 · 点板件看名称</span>
 </div>
 
-<div data-page-node-id="Ynvc5YkJcyPq6FXzlac8nm" id="controls">
-  <div data-page-node-id="uZYmYwU1rKxvmThw2mvKlD" class="row">
-    <label data-page-node-id="yixnRhtSbW8HU7OVqt6jlU"><!--pnid:aWdH3kn1KZRJco7K7139Nb-->爆炸拆解</label>
-    <input data-page-node-id="paFEW9Fng1afBpLLkrK9H8" id="explode" max="100" min="0" type="range" value="0">
-    <span data-page-node-id="Rx81fdmUb4OWkXMtGOyV4i" id="explodeVal"><!--pnid:1GQuIMNj017Ka8uXhn54Zy-->0%</span>
+<div data-page-node-id="7MyXRMqnniTE7PyRICy9Mv" id="info">
+  <div data-page-node-id="M7rPgp9SnynTGwPSG1DYvW">
+    <div data-page-node-id="BAsX91dANJmkKcHQVJ28Ps" class="name" id="infoName"><!--pnid:cNK1RnTq80qHgYsHktKp6M-->板件名称</div>
+    <div data-page-node-id="cqHs7TyO13uhUX7CNdAOuZ" class="meta" id="infoMeta"><!--pnid:muacwb9nvbC67aNTm96rfq-->尺寸</div>
   </div>
-  <div data-page-node-id="M6l1wLxAFGKUcLrVUQcmOm" class="row btns">
-    <button data-page-node-id="jqed6LPfKJ8C0PhoUg2Fxv" id="btnReset"><!--pnid:jvO6XmgqVTSkM7T53PfcS6-->复位</button>
-    <button data-page-node-id="Q8GFC17QY2dXufu955v2Sb" id="btnSpin"><!--pnid:yDmzhF7zLZwqzg6thHcTJk-->自动旋转</button>
-    <button data-page-node-id="OZaGjTFp6HnNIzGFeVFEMT" id="btnGrid"><!--pnid:lpG3OqCjsqhaXvxP1lCyZT-->地面</button>
+  <button data-page-node-id="NfnOB8xsT5ikv67bvcWvV9" id="infoClose"><!--pnid:inTeohD7q31rNsTuYAhOJx-->✕</button>
+</div>
+
+<div data-page-node-id="F4mMNNCaCApgrrTva3H7v0" id="controls">
+  <div data-page-node-id="eL9TXMBsXOs1lElZR2oHBl" class="row">
+    <label data-page-node-id="CpaFxJBDZ6YbKfA2MpqUfQ"><!--pnid:azYe5UOWQT67Wey6bdsKoF-->爆炸拆解</label>
+    <input data-page-node-id="1dWs6CnZswKZrCXAUuGrcS" id="explode" max="100" min="0" type="range" value="0">
+    <span data-page-node-id="HjbbwccvLYJF4ICOrJfHX9" id="explodeVal"><!--pnid:ZUIz6lsYmunTAGvKdhHQJA-->0%</span>
+  </div>
+  <div data-page-node-id="RmwaC8fHSaHwwn1fycLYDw" class="row btns">
+    <button data-page-node-id="KX8QoLXP5AWma4pczTaRXn" id="btnReset"><!--pnid:EDYRU9hYQwrcyBHiZTLGxL-->复位</button>
+    <button data-page-node-id="iKUHylME7r7wnEKgOph2wO" id="btnSpin"><!--pnid:KJ4x68EYdDuiOz5KXjnc8A-->自动旋转</button>
+    <button data-page-node-id="DVWNxVtdGrJUJZQUYEbKEu" id="btnGrid"><!--pnid:BxVZv1JZ7rrLp5CuhYSckr-->地面</button>
   </div>
 </div>
 
-<div data-page-node-id="DFbizueI14YxmghV8Ro6SS" id="overlay">
-  <div data-page-node-id="MqMOxLOkKPZbx4Mxk5kDeu" class="spinner" id="spinner"></div>
-  <div data-page-node-id="EdRilxzoGadIEtSl3Q0UnY" id="msg"><!--pnid:w3wHoyxfkKo4b6hIklDk5x-->正在加载模型…</div>
-  <div data-page-node-id="wt3VqkMVJ8Lhdy35A5OdDV" id="dropzone"><!--pnid:MJDrflHduNbKW8hwGRR91g-->也可以把本地的 .glb / .gltf 文件<br data-page-node-id="mGXGQTiceHfKJFGNrJgHys"><!--pnid:bNptnrJMXb4m1MpdTJPtoJ-->拖到这里查看</div>
+<div data-page-node-id="6pe3PXvP9sEcheYgReogP4" id="overlay">
+  <div data-page-node-id="4XYOhfn4WqrwvC2S8wSG1s" class="spinner" id="spinner"></div>
+  <div data-page-node-id="gqy5bvNnRnUrA7M2LOpawF" id="msg"><!--pnid:0xUalb0AWoo7RpCm7E8e8F-->正在加载模型…</div>
+  <div data-page-node-id="SjGPjyf0oZ5sqArH5pBlAk" id="dropzone"><!--pnid:lVM3ElkgDJALzjeOtwAVnO-->也可以把本地的 .glb / .gltf 文件<br data-page-node-id="8gw9aG5muscYRKduqFNMm0"><!--pnid:NhChbBnHhhWVSxMWaRlh2b-->拖到这里查看</div>
 </div>
 
-<script data-page-node-id="mrF8sd6ud42IarymzU7kHx" data-pnid-children="7zGgGfySdrXMM4v1qqijgI" type="importmap">
+<script data-page-node-id="np7UjtRVYZrZcPuzo8qsr8" data-pnid-children="oNxRhmoroRilPbdfNKb4Xu" type="importmap">
 {
   "imports": {
     "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
@@ -123,7 +153,7 @@
 }
 </script>
 
-<script data-page-node-id="Ylto7gZXFUkl88YwZHakz5" data-pnid-children="YeUCjZdGCbo3IIvIJQggUS" type="module">
+<script data-page-node-id="iW0SVbM3U1J2KazMdsc2eH" data-pnid-children="aQKj8tOFVdJ74HjoN9eIWm" type="module">
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
@@ -173,10 +203,15 @@ let modelRoot = null;          // gltf.scene
 let explodeParts = [];         // 每个网格的爆炸信息
 let explodeFactor = 0;
 let modelRadius = 1;
+let pickMeshes = [];           // 可点击查询的板件
+let selectedMesh = null;
+let selectedOrigEmissive = null;
 
 function hideOverlay() { overlay.classList.add("hidden"); }
 
 function setupModel(scene3d, name) {
+  clearSelection();
+  infoCard.classList.remove("show");
   if (modelRoot) {
     scene.remove(modelRoot);
     modelRoot.traverse(o => {
@@ -209,8 +244,12 @@ function setupModel(scene3d, name) {
   explodeParts = [];
   const worldCenter = new THREE.Vector3();
   let idx = 0;
+  pickMeshes = [];
   modelRoot.traverse(obj => {
+    // 隐藏模型文件里自带的线框 / 点（拆单导出常带边线，看着杂乱）
+    if (obj.isLine || obj.isLineSegments || obj.isPoints) { obj.visible = false; return; }
     if (obj.isMesh) {
+      obj.userData.partName = pickPartName(obj);
       const b = new THREE.Box3().setFromObject(obj);
       const mc = b.getCenter(new THREE.Vector3());
       // 注意：modelRoot 已平移到原点，整体中心即原点上方 size.y/2
@@ -233,6 +272,7 @@ function setupModel(scene3d, name) {
         dirLocal: dirLocal,
         scale: modelRadius * 0.9 + (idx % 5) * modelRadius * 0.12 // 分层飞出，层次感更强
       });
+      pickMeshes.push(obj);
       idx++;
     }
   });
@@ -292,6 +332,82 @@ function loadFile(file) {
   };
   fr.readAsArrayBuffer(file);
 }
+
+/* ---------------- 点击板件查询 ---------------- */
+const infoCard = document.getElementById("info");
+const infoName = document.getElementById("infoName");
+const infoMeta = document.getElementById("infoMeta");
+document.getElementById("infoClose").addEventListener("click", () => {
+  clearSelection();
+  infoCard.classList.remove("show");
+});
+
+// 从网格或其祖先链上找有意义的节点名
+function pickPartName(obj) {
+  let o = obj;
+  for (let i = 0; i < 6 && o; i++) {
+    const n = (o.name || "").trim();
+    if (n && n !== "Scene" && !/^part_\d+$/i.test(n) && !/^(root|node)\b/i.test(n)) return n;
+    o = o.parent;
+  }
+  return "未命名板件";
+}
+
+function clearSelection() {
+  if (selectedMesh && selectedMesh.material) {
+    const mats = Array.isArray(selectedMesh.material) ? selectedMesh.material : [selectedMesh.material];
+    mats.forEach((m, i) => {
+      if (m.emissive && selectedOrigEmissive) {
+        const orig = Array.isArray(selectedOrigEmissive) ? selectedOrigEmissive[i] : selectedOrigEmissive;
+        m.emissive.copy(orig);
+      }
+    });
+  }
+  selectedMesh = null;
+  selectedOrigEmissive = null;
+}
+
+function showInfo(mesh) {
+  clearSelection();
+  selectedMesh = mesh;
+  // 高亮：给材质加自发光
+  if (mesh.material) {
+    const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+    selectedOrigEmissive = mats.map(m => (m.emissive ? m.emissive.clone() : null));
+    mats.forEach(m => { if (m.emissive) m.emissive.setHex(0x8a2a18); });
+  }
+  // 尺寸（模型单位是米，转毫米显示）
+  const box = new THREE.Box3().setFromObject(mesh);
+  const size = box.getSize(new THREE.Vector3());
+  const mm = [size.x, size.y, size.z].map(v => Math.round(v * 1000));
+  infoName.textContent = mesh.userData.partName || "未命名板件";
+  infoMeta.textContent = "尺寸：" + mm[0] + " × " + mm[1] + " × " + mm[2] + " mm（长宽高近似值）";
+  infoCard.classList.add("show");
+}
+
+const raycaster = new THREE.Raycaster();
+let downX = 0, downY = 0, downT = 0;
+renderer.domElement.addEventListener("pointerdown", (e) => {
+  downX = e.clientX; downY = e.clientY; downT = Date.now();
+});
+renderer.domElement.addEventListener("pointerup", (e) => {
+  // 只在"轻点"（没怎么移动、时间短）时触发查询，避免和旋转手势冲突
+  const moved = Math.hypot(e.clientX - downX, e.clientY - downY);
+  if (moved > 8 || Date.now() - downT > 350) return;
+  if (!pickMeshes.length) return;
+  const ndc = new THREE.Vector2(
+    (e.clientX / innerWidth) * 2 - 1,
+    -(e.clientY / innerHeight) * 2 + 1
+  );
+  raycaster.setFromCamera(ndc, camera);
+  const hits = raycaster.intersectObjects(pickMeshes, false);
+  if (hits.length) {
+    showInfo(hits[0].object);
+  } else {
+    clearSelection();
+    infoCard.classList.remove("show");
+  }
+});
 
 /* ---------------- 控件 ---------------- */
 const slider = document.getElementById("explode");
